@@ -88,7 +88,7 @@ public class YaccServiceImpl implements YaccService {
             }
         }
 
-        if(checkMessages && !isCommitExcluded(settings, commit) && !isBranchExcluded(settings, branchName)) {
+        if(checkMessages && !isCommitExcluded(settings, commit) && !shouldBranchBeFiltered(settings, branchName)) {
             errors.addAll(checkCommitMessageRegex(settings, commit));
 
             // Checking JIRA issues might be dependent on the commit message regex, so only proceed if there are no errors.
@@ -144,7 +144,7 @@ public class YaccServiceImpl implements YaccService {
         return false;
     }
     
-    private boolean isBranchExcluded(Settings settings, String branchName) {
+    private boolean shouldBranchBeFiltered(Settings settings, String branchName) {
         // Exclude by Regex setting
         String excludeBranchRegex = settings.getString("excludeBranchRegex");
 
@@ -154,6 +154,15 @@ public class YaccServiceImpl implements YaccService {
             if(matcher.matches()) {
                 return true;
             }
+        }
+        
+        String includeBranchRegex = settings.getString("includeBranchRegex");
+
+        if(includeBranchRegex != null && !includeBranchRegex.isEmpty()) {
+            Pattern pattern = Pattern.compile(includeBranchRegex);
+            Matcher matcher = pattern.matcher(branchName);
+            
+            return !matcher.matches();
         }
 
         return false;

@@ -183,6 +183,14 @@
 		{param descriptionText: 'Exclude commits to branches matching this regex.' /}
 		{param errorTexts: $errors ? $errors['excludeBranchRegex'] : null /}
    {/call}
+   
+   {call aui.form.textField}
+		{param id: 'includeBranchRegex' /}
+		{param labelContent: 'Include Branch Regex' /}
+		{param value: $config['includeBranchRegex'] /}
+		{param descriptionText: 'Include commits to branches matching this regex.' /}
+		{param errorTexts: $errors ? $errors['IncludeBranchRegex'] : null /}
+   {/call}
 
    {call aui.form.checkboxField}
     {param legendContent: 'Exclude Service User Commits' /}
